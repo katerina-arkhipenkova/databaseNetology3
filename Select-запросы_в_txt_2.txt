@@ -38,6 +38,21 @@ where track_id is null;
 select distinct singer.singer_name, track.timing from singer
 join singer_album on singer.id = singer_album.singer_id
 join album on album.id = singer_album.album_id
-join track on track.album_id = album.id 
-order by timing asc
-limit 1;
+join track on track.album_id = album.id
+where track.timing = (select min(timing) from track)
+group by singer.singer_name, timing;
+
+with tracks_count as (select count(track.id) as t_count, album.title from track
+	join album on track.album_id = album.id
+	group by album.title
+	order by count(track.id))
+select album.title from album
+join track on track.album_id = album.id
+group by album.title
+having count(track.id) = (select min(t_count) from tracks_count);
+
+
+
+
+
+
