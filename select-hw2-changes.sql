@@ -10,10 +10,11 @@ select avg(timing), album.title from track
 join album on album.id = track.album_id
 group by album.title; 
 
-select distinct singer_name from singer
+select singer_name from singer 
+where singer_name not like (select distinct singer_name from singer
 join singer_album on singer.id = singer_album.singer_id 
 join album on album.id = singer_album.album_id 
-where album.year != 2020;
+where album.year = 2020);
 
 select collection.title from collection
 join collection_track on collection_track.collection_id = collection.id 
